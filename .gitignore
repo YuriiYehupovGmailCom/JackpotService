@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# IntelliJ / Cursor / VSCode local config
+.idea/
+.vscode/
+*.iml
+
+# Gradle and build outputs
+.gradle/
+build/
+out/
+
+# Logs
+*.log
