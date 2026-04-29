@@ -36,6 +36,6 @@ public class BetController {
     @PostMapping("/{betId}/evaluate")
     public RewardEvaluationResponse evaluateBet(@PathVariable String betId) {
         JackpotRewardResult result = betProcessingService.evaluateReward(betId);
-        return new RewardEvaluationResponse(betId, result.winner(), result.rewardAmount(), result.currentJackpotAmount());
+        return new RewardEvaluationResponse(betId, result.winner(), result.rewardAmount());
     }
 }

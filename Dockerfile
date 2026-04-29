@@ -1,0 +1,20 @@
+FROM eclipse-temurin:21-jdk AS build
+
+WORKDIR /workspace
+
+COPY gradlew settings.gradle build.gradle ./
+COPY gradle ./gradle
+RUN chmod +x ./gradlew
+
+COPY src ./src
+RUN ./gradlew clean bootJar --no-daemon
+
+FROM eclipse-temurin:26-jdk
+
+WORKDIR /app
+
+COPY --from=build /workspace/build/libs/JackpotService-0.0.1-SNAPSHOT.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
