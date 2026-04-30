@@ -74,13 +74,14 @@ public class BetProcessingService {
         JackpotEntity jackpot = jackpotRepository.findById(contribution.getJackpotId())
                 .orElseThrow(() -> new IllegalStateException("Jackpot not found for id: " + contribution.getJackpotId()));
 
-        BigDecimal chance = rewardStrategyResolver.resolve(jackpot.getRewardType()).calculateChancePercentage(jackpot);
+        JackpotEntity jackpotSnapshot = rewardEvaluationSnapshot(jackpot, contribution.getCurrentJackpotAmount());
+        BigDecimal chance = rewardStrategyResolver.resolve(jackpot.getRewardType()).calculateChancePercentage(jackpotSnapshot);
         BigDecimal random = randomNumberGenerator.nextPercentage();
         boolean winner = random.compareTo(chance) <= 0;
 
         BigDecimal rewardAmount = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
         if (winner) {
-            rewardAmount = jackpot.getCurrentPoolAmount().setScale(2, RoundingMode.HALF_UP);
+            rewardAmount = contribution.getCurrentJackpotAmount().setScale(2, RoundingMode.HALF_UP);
 
             JackpotRewardEntity rewardEntity = new JackpotRewardEntity();
             rewardEntity.setBetId(contribution.getBetId());
@@ -95,5 +96,18 @@ public class BetProcessingService {
         }
 
         return new JackpotRewardResult(winner, rewardAmount, jackpot.getCurrentPoolAmount().setScale(2, RoundingMode.HALF_UP));
+    }
+
+    private JackpotEntity rewardEvaluationSnapshot(JackpotEntity jackpot, BigDecimal currentPoolAmount) {
+        JackpotEntity snapshot = new JackpotEntity();
+        snapshot.setJackpotId(jackpot.getJackpotId());
+        snapshot.setCurrentPoolAmount(currentPoolAmount);
+        snapshot.setRewardType(jackpot.getRewardType());
+        snapshot.setFixedRewardChancePercentage(jackpot.getFixedRewardChancePercentage());
+        snapshot.setVariableRewardBaseChancePercentage(jackpot.getVariableRewardBaseChancePercentage());
+        snapshot.setVariableRewardIncreaseRatePercentage(jackpot.getVariableRewardIncreaseRatePercentage());
+        snapshot.setVariableRewardIncreaseStep(jackpot.getVariableRewardIncreaseStep());
+        snapshot.setVariableRewardGuaranteedPoolLimit(jackpot.getVariableRewardGuaranteedPoolLimit());
+        return snapshot;
     }
 }

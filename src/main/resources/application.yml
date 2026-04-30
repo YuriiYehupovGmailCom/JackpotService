@@ -25,17 +25,14 @@ jackpot:
         rewardType: FIXED
         fixedRewardChancePercentage: 1
       - id: JACKPOT-2
-        initialPoolAmount: 500
-        contributionType: VARIABLE
-        variableContributionBasePercentage: 10
-        variableContributionDecreaseRatePercentage: 0.5
-        variableContributionFloorPercentage: 2
-        variableContributionDecreaseStep: 100
+        initialPoolAmount: 120
+        contributionType: FIXED
+        fixedContributionPercentage: 100
         rewardType: VARIABLE
-        variableRewardBaseChancePercentage: 0.5
-        variableRewardIncreaseRatePercentage: 0.2
-        variableRewardIncreaseStep: 100
-        variableRewardGuaranteedPoolLimit: 2000
+        variableRewardBaseChancePercentage: 0
+        variableRewardIncreaseRatePercentage: 0
+        variableRewardIncreaseStep: 1
+        variableRewardGuaranteedPoolLimit: 150
 
 logging:
   level:
