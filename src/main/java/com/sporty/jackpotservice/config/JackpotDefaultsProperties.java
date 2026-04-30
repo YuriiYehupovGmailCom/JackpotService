@@ -11,16 +11,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "jackpot.defaults")
 public class JackpotDefaultsProperties {
 
-    private String topic;
     private List<JackpotConfig> jackpots = new ArrayList<>();
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
 
     public List<JackpotConfig> getJackpots() {
         return jackpots;

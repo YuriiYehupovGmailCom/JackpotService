@@ -9,7 +9,7 @@ RUN chmod +x ./gradlew
 COPY src ./src
 RUN ./gradlew clean bootJar --no-daemon
 
-FROM eclipse-temurin:26-jdk
+FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 

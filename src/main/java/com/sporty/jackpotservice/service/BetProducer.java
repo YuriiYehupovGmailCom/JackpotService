@@ -1,8 +1,8 @@
-package com.sporty.jackpotservice.kafka;
+package com.sporty.jackpotservice.service;
 
 import com.sporty.jackpotservice.domain.BetPayload;
 
-public interface BetPublisher {
+public interface BetProducer {
 
     void publish(BetPayload payload);
 }

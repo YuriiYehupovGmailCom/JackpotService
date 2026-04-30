@@ -1,22 +1,26 @@
 spring:
-  application:
-    name: JackpotService
   datasource:
     url: jdbc:h2:mem:jackpotdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: false
-  h2:
-    console:
-      enabled: true
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+    consumer:
+      group-id: jackpot-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.value.default.type: com.sporty.jackpotservice.domain.BetPayload
+        spring.json.trusted.packages: com.sporty.jackpotservice.domain
 
 jackpot:
   defaults:
-    topic: jackpot-bets
     jackpots:
       - id: JACKPOT-1
         initialPoolAmount: 1000
@@ -33,7 +37,3 @@ jackpot:
         variableRewardIncreaseRatePercentage: 0
         variableRewardIncreaseStep: 1
         variableRewardGuaranteedPoolLimit: 150
-
-logging:
-  level:
-    com.sporty.jackpotservice: INFO

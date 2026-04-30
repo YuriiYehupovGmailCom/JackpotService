@@ -2,8 +2,8 @@ package com.sporty.jackpotservice.api;
 
 import com.sporty.jackpotservice.domain.BetPayload;
 import com.sporty.jackpotservice.domain.JackpotRewardResult;
-import com.sporty.jackpotservice.kafka.BetPublisher;
 import com.sporty.jackpotservice.service.BetProcessingService;
+import com.sporty.jackpotservice.service.BetProducer;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/bets")
 public class BetController {
 
-    private final BetPublisher betPublisher;
+    private final BetProducer betProducer;
     private final BetProcessingService betProcessingService;
 
-    public BetController(BetPublisher betPublisher, BetProcessingService betProcessingService) {
-        this.betPublisher = betPublisher;
+    public BetController(BetProducer betProducer, BetProcessingService betProcessingService) {
+        this.betProducer = betProducer;
         this.betProcessingService = betProcessingService;
     }
 
@@ -29,7 +29,7 @@ public class BetController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public PublishBetResponse publishBet(@Valid @RequestBody PublishBetRequest request) {
         BetPayload payload = new BetPayload(request.betId(), request.userId(), request.jackpotId(), request.betAmount());
-        betPublisher.publish(payload);
+        betProducer.publish(payload);
         return new PublishBetResponse("PUBLISHED", request.betId());
     }
 
